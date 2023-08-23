@@ -2,13 +2,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rideshare_API.Data;
 using Rideshare_API.Entities;
+using Rideshare_API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
+builder.Services.AddScoped<IRiderRepository, RiderRepository>();
+builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();

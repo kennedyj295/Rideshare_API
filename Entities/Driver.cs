@@ -4,5 +4,6 @@
     {
         public string LicenseNumber { get; set; }
         public string VehicleType { get; set; }
+        public decimal rating { get; set; }
     }
 }

@@ -11,6 +11,11 @@ namespace Rideshare_API.Data
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Driver> Drivers { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Rider>().ToTable("Riders");
+        }
+
 
     }
 }
