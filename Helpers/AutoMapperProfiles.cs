@@ -8,6 +8,8 @@ namespace Rideshare_API.Helpers
     {
         public AutoMapperProfiles() 
         {
+            CreateMap<RegisterDTO, Rider>();
+            CreateMap<RegisterDTO, Driver>();
             CreateMap<Rider, RiderDTO>();
             CreateMap<Driver, DriverDTO>();
         }

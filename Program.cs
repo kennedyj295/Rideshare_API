@@ -11,6 +11,11 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
+//builder.Services.AddAuthorization(opt =>
+//{
+//    opt.AddPolicy("RequreRiderRole", policy => policy.RequireRole("Rider"));
+//    opt.AddPolicy("RequireDriverRole", policy => policy.RequireRole("Driver"));
+//});
 builder.Services.AddScoped<IRiderRepository, RiderRepository>();
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 // Add services to the container.
@@ -18,16 +23,13 @@ builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();
@@ -38,23 +40,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await RoleSeeder.SeedRoles(app.Services);
+
 app.Run();
-
-async Task CreateRoles(IServiceProvider serviceProvider)
-{
-    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    string[] roleNames = { "Driver", "Rider" };
-    IdentityResult roleResult;
-
-    foreach (var roleName in roleNames)
-    {
-        var roleExist = await RoleManager.RoleExistsAsync(roleName);
-        if(!roleExist)
-        {
-            roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-        }
-    }
-}
-
-CreateRoles(app.Services).Wait();
