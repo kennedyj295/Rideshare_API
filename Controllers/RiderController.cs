@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Rideshare_API.Data;
 using Rideshare_API.DTOs;
 using Rideshare_API.Entities;
+using Rideshare_API.Helpers;
 using Rideshare_API.Interfaces;
 
 namespace Rideshare_API.Controllers
@@ -17,12 +18,14 @@ namespace Rideshare_API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        public RiderController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IRiderRepository riderRepository, IMapper mapper)
+        private readonly TokenService _tokenService;
+        public RiderController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IRiderRepository riderRepository, IMapper mapper, TokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _riderRepository = riderRepository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         [HttpPost("registerrider")]
@@ -45,13 +48,16 @@ namespace Rideshare_API.Controllers
             return new RiderDTO
             {
                 UserId = user.UserName,
-                //Token = 
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                //TODO let's find a way to pass passwords securely
+                Token = await _tokenService.GenerateTokenAsync(registerDTO.UserName, registerDTO.Password)
             };
 
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<RiderDTO?>> GetUserById(int id)
+        public async Task<ActionResult<RiderDTO?>> GetUserById(string id)
         {
             return await _riderRepository.GetRiderByIdAsync(id);
         }

@@ -1,16 +1,40 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Rideshare_API.Data;
 using Rideshare_API.Entities;
 using Rideshare_API.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+    };
+});
 //builder.Services.AddAuthorization(opt =>
 //{
 //    opt.AddPolicy("RequreRiderRole", policy => policy.RequireRole("Rider"));
@@ -40,6 +64,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await RoleSeeder.SeedRoles(app.Services);
+using (var serviceScope = app.Services.CreateScope())
+{
+    var serviceProvider = serviceScope.ServiceProvider;
+    await RoleSeeder.SeedRoles(serviceProvider);
+}
 
 app.Run();

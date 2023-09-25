@@ -13,9 +13,9 @@ namespace Rideshare_API.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.Entity<Rider>().ToTable("Riders");
         }
-
-
     }
 }

@@ -5,6 +5,6 @@ namespace Rideshare_API.Interfaces
 {
     public interface IRiderRepository
     {
-        public Task<RiderDTO?> GetRiderByIdAsync(int id);
+        public Task<RiderDTO?> GetRiderByIdAsync(string id);
     }
 }

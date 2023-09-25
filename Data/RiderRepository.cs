@@ -16,7 +16,7 @@ namespace Rideshare_API.Data
             _context = context;
             _mapper = mapper;
         }
-        public async Task<RiderDTO?> GetRiderByIdAsync(int id)
+        public async Task<RiderDTO?> GetRiderByIdAsync(string id)
         {
             return await _context.Riders
                 .Where(x => x.Id == id)
