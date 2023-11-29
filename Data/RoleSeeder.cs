@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Rideshare_API.Entities;
 
 namespace Rideshare_API.Data
 {
@@ -6,16 +7,16 @@ namespace Rideshare_API.Data
     {
         public static async Task SeedRoles(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<CustomIdentityRole>>();
 
             if (!await roleManager.RoleExistsAsync("Driver"))
             {
-                await roleManager.CreateAsync(new IdentityRole("Driver"));
+                await roleManager.CreateAsync(new CustomIdentityRole("Driver"));
             }
 
             if (!await roleManager.RoleExistsAsync("Rider"))
             {
-                await roleManager.CreateAsync(new IdentityRole("Rider"));
+                await roleManager.CreateAsync(new CustomIdentityRole("Rider"));
             }
         }
     }

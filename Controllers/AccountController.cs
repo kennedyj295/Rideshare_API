@@ -13,8 +13,5 @@ namespace Rideshare_API.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        
-
-
     }
 }

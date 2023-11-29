@@ -2,6 +2,6 @@
 {
     public class Rider : ApplicationUser
     {
-        public decimal Rating { get; set; }
+        public decimal? Rating { get; set; }
     }
 }

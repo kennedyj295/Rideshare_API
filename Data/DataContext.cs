@@ -8,6 +8,7 @@ namespace Rideshare_API.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        public DbSet<CustomIdentityRole> CustomRoles { get; set; }
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Driver> Drivers { get; set; }
 
@@ -15,6 +16,8 @@ namespace Rideshare_API.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<CustomIdentityRole>().ToTable("Roles");
+            builder.Entity<Driver>().ToTable("Drivers");
             builder.Entity<Rider>().ToTable("Riders");
         }
     }

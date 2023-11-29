@@ -40,7 +40,7 @@ namespace Rideshare_API.Helpers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 return tokenHandler.WriteToken(token);
             }
-            return null;
+            return "Authentication failed. Please check your username and password.";
         }
 
 
