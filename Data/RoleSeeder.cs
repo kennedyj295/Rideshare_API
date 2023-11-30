@@ -7,16 +7,16 @@ namespace Rideshare_API.Data
     {
         public static async Task SeedRoles(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<CustomIdentityRole>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
             if (!await roleManager.RoleExistsAsync("Driver"))
             {
-                await roleManager.CreateAsync(new CustomIdentityRole("Driver"));
+                await roleManager.CreateAsync(new IdentityRole<int>("Driver"));
             }
 
             if (!await roleManager.RoleExistsAsync("Rider"))
             {
-                await roleManager.CreateAsync(new CustomIdentityRole("Rider"));
+                await roleManager.CreateAsync(new IdentityRole<int>("Rider"));
             }
         }
     }

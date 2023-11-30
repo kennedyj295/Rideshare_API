@@ -3,7 +3,7 @@
 
 namespace Rideshare_API.Entities
 {
-    public abstract class ApplicationUser : IdentityUser
+    public abstract class ApplicationUser : IdentityUser<int>
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

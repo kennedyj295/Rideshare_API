@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +15,10 @@ namespace Rideshare_API.Controllers
     {
         private readonly IRiderRepository _riderRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<CustomIdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly TokenService _tokenService;
-        public RiderController(UserManager<ApplicationUser> userManager, RoleManager<CustomIdentityRole> roleManager, IRiderRepository riderRepository, IMapper mapper, TokenService tokenService)
+        public RiderController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IRiderRepository riderRepository, IMapper mapper, TokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;

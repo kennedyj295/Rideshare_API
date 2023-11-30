@@ -11,15 +11,16 @@ namespace Rideshare_API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public RiderRepository(DataContext context, IMapper mapper) 
+        public RiderRepository (DataContext context, IMapper mapper) 
         {
             _context = context;
             _mapper = mapper;
         }
         public async Task<RiderDTO?> GetRiderByIdAsync(string id)
         {
+            int.TryParse(id, out var converted);
             return await _context.Riders
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == converted)
                 .ProjectTo<RiderDTO>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
         }
