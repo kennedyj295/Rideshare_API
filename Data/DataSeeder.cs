@@ -1,4 +1,5 @@
 ﻿using Rideshare_API.Entities;
+using System;
 
 namespace Rideshare_API.Data
 {
@@ -15,6 +16,7 @@ namespace Rideshare_API.Data
         {
             await SeedDriversAsync();
             await SeedRidersAsync();
+            await SeedMessagesAsync();
         }
 
         private async Task SeedDriversAsync()
@@ -34,10 +36,21 @@ namespace Rideshare_API.Data
                         Address = "DriverAddress" + random.Next(1, 100),
                         LicenseNumber = "LIC" + random.Next(1000, 9999),
                         VehicleType = "Sedan",
-                        rating = (decimal)(random.NextDouble() * 5.0)
                     };
 
                     _context.Drivers.Add(driver);
+
+                    for (int j = 0; j < 5; j++) 
+                    {
+                        var rating = new DriverRating
+                        {
+                            Value = random.Next(1, 6), // Random rating between 1 and 5
+                            Driver = driver
+                        };
+
+                        _context.DriverRatings.Add(rating);
+                    }
+
                 }
                 await _context.SaveChangesAsync();
             }
@@ -59,11 +72,50 @@ namespace Rideshare_API.Data
                         FirstName = "RiderFirstName" + random.Next(1, 100),
                         LastName = "RiderLastName" + random.Next(1, 100),
                         Address = "RiderAddress" + random.Next(1, 100),
-                        Rating = (decimal)(random.NextDouble() * 5.0)
                     };
 
                     _context.Riders.Add(rider);
+
+
+                    for (int j = 0; j < 5; j++)
+                    {
+                        var rating = new RiderRating
+                        {
+                            Value = random.Next(1, 6),
+                            Rider = rider
+                        };
+
+                        _context.RiderRatings.Add(rating);
+                    }
                 }
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task SeedMessagesAsync()
+        {
+            if (!_context.Messages.Any())
+            {
+                var random = new Random();
+                var drivers = _context.Drivers.ToList();
+                var riders = _context.Riders.ToList();
+
+                for (int i = 0; i < 20; i++) 
+                {
+                    var senderDriver = drivers[random.Next(drivers.Count)];
+                    var receiverRider = riders[random.Next(riders.Count)];
+
+                    var message = new Message
+                    {
+                        Content = "Sample message content " + i,
+                        Timestamp = DateTime.UtcNow,
+                        SenderDriver = senderDriver,
+                        ReceiverRider = receiverRider
+                    };
+
+                    _context.Messages.Add(message);
+                }
+
                 await _context.SaveChangesAsync();
             }
         }
